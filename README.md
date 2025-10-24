@@ -12,7 +12,31 @@ A simple PHP-based visitor logger that captures IP, geo data, device, browser, s
 - `error_log.txt` — logs server errors.
 
 ## DB Schema
-(see SQL in README above)
+CREATE DATABASE IF NOT EXISTS ipcollection CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE ipcollection;
+
+CREATE TABLE IF NOT EXISTS visitors (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  ip_address VARCHAR(45) NOT NULL,
+  region VARCHAR(128) DEFAULT NULL,
+  city VARCHAR(128) DEFAULT NULL,
+  asn VARCHAR(64) DEFAULT NULL,
+  isp VARCHAR(255) DEFAULT NULL,
+  latitude DOUBLE DEFAULT 0,
+  longitude DOUBLE DEFAULT 0,
+  destination_port INT DEFAULT 0,
+  session_id VARCHAR(128) DEFAULT NULL,
+  user_agent TEXT,
+  device_type VARCHAR(64) DEFAULT NULL,
+  browser VARCHAR(64) DEFAULT NULL,
+  start_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  end_time TIMESTAMP NULL DEFAULT NULL,
+  total_time_spent INT NULL, -- seconds
+  INDEX (ip_address),
+  INDEX (session_id),
+  INDEX (start_time)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 
 ## How it works (flow)
 1. `index.php` starts PHP session.
